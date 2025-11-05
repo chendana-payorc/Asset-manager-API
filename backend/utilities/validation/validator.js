@@ -1,0 +1,80 @@
+const Joi = require('joi');
+
+let validator = {
+
+  register: async (req, res, next) => {
+    const schema = Joi.object({
+      name: Joi.string()
+        .min(3)
+        .max(50)
+        .required()
+        .messages({
+          'string.empty': 'Name is required',
+          'string.min': 'Name should have at least 3 characters',
+          'string.max': 'Name should not exceed 50 characters',
+          'any.required': 'Name is required'
+        }),
+      email: Joi.string()
+        .email()
+        .required()
+        .messages({
+          'string.email': 'Enter a valid email address',
+          'any.required': 'Email is required'
+        }),
+      password: Joi.string()
+        .min(6)
+        .max(20)
+        .required()
+        .messages({
+          'string.min': 'Password must be at least 6 characters long',
+          'string.max': 'Password cannot exceed 20 characters',
+          'any.required': 'Password is required'
+        })
+    });
+
+    const result = schema.validate(req.body, { abortEarly: false });
+
+    if (result.error) {
+      return res.status(400).json({
+        status: 'failed',
+        message: result.error.details.map(e => e.message)
+      });
+    } else {
+      next();
+    }
+  },
+
+  login: async (req, res, next) => {
+    const schema = Joi.object({
+      email: Joi.string()
+        .email()
+        .required()
+        .messages({
+          'string.email': 'Enter a valid email address',
+          'any.required': 'Email is required'
+        }),
+      password: Joi.string()
+        .min(6)
+        .max(20)
+        .required()
+        .messages({
+          'string.min': 'Password must be at least 6 characters long',
+          'string.max': 'Password cannot exceed 20 characters',
+          'any.required': 'Password is required'
+        })
+    });
+
+    const result = schema.validate(req.body, { abortEarly: false });
+
+    if (result.error) {
+      return res.status(400).json({
+        status: 'failed',
+        message: result.error.details.map(e => e.message)
+      });
+    } else {
+      next();
+    }
+  }
+};
+
+module.exports = validator;
