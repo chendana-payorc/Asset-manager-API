@@ -13,6 +13,11 @@ app.use((req, res, next) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const adminRoutes = require('./routes/admin_routes');
+const departmentRoutes = require('./routes/department_routes');
+
+// register routes
 app.use('/api/admin', adminRoutes);
+app.use('/api/department', departmentRoutes);
+
 
 module.exports = app;
