@@ -1,12 +1,13 @@
 const DepartmentModel = require('../models/departmentModel');
 
 const departmentController = {
+  // Create department
   async create(req, res) {
     try {
-      const {name} = req.body;
+      const {name } = req.body;
 
       if (!name) {
-        return res.status(400).json({ error: "department_name is required" });
+        return res.status(400).json({ error: "name is required" });
       }
 
       const result = await DepartmentModel.createDepartment(name);
@@ -16,6 +17,7 @@ const departmentController = {
     }
   },
 
+  // Get all departments
   async getAll(req, res) {
     try {
       const result = await DepartmentModel.getAllDepartments();
@@ -25,6 +27,7 @@ const departmentController = {
     }
   },
 
+  // Get department by ID
   async getById(req, res) {
     try {
       const { id } = req.params;
@@ -40,17 +43,24 @@ const departmentController = {
     }
   },
 
+  // Update department
   async update(req, res) {
     try {
       const { id } = req.params;
-      const { name, status } = req.body;
-      const result = await DepartmentModel.updateDepartment(id, name, status);
+      const { department_name, status } = req.body;
+
+      if (!department_name || !status) {
+        return res.status(400).json({ error: "department_name and status are required" });
+      }
+
+      const result = await DepartmentModel.updateDepartment(id, department_name, status);
       return res.json({ success: true, message: "Department updated successfully", result });
     } catch (err) {
       return res.status(500).json({ error: err.message });
     }
   },
 
+  // Delete department
   async remove(req, res) {
     try {
       const { id } = req.params;
