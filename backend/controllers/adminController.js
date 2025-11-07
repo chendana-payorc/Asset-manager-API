@@ -43,7 +43,65 @@ login: async (req, res) => {
     }
   },
  
+  getAllAdmins: async (req, res) => {
+    try {
+      const admins = await AdminModel.getAllAdmins();
+      res.json({ success: true, data: admins });
+    } catch (err) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  }
  
 }
+
+
+// ADMIN CRUD OPERATIONS
+
+// Get all admins
+adminController.getAllAdmins = async (req, res) => {
+  try {
+    const data = await AdminModel.getAllAdmins();
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// Get admin by ID
+adminController.getAdminById = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = await AdminModel.getAdminById(id);
+    if (!data) return res.status(404).json({ success: false, message: 'Admin not found' });
+    res.json({ success: true, data });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// Update admin
+adminController.updateAdmin = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { name, email } = req.body;
+    const data = { name, email };
+    await AdminModel.updateAdmin(id, data);
+    res.json({ success: true, message: 'Admin updated successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// Delete admin
+adminController.deleteAdmin = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await AdminModel.deleteAdmin(id);
+    res.json({ success: true, message: 'Admin deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
+
 
 module.exports=adminController;
